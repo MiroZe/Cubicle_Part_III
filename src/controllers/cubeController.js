@@ -19,7 +19,9 @@ cubeController.post('/create', async (req,res) => {
         name : req.body.name,
         description : req.body.description,
         imageUrl : req.body.imageUrl,
-        difficultyLevel: Number(req.body.difficultyLevel)
+        difficultyLevel: Number(req.body.difficultyLevel),
+        owner: req.user._id
+        
     }
     const cube =  await createCube(cubeData)
     
@@ -29,6 +31,11 @@ cubeController.post('/create', async (req,res) => {
 cubeController.get('/:cubeId/details', async (req,res) => {
 
     const cube = await getOneCubeWithAccesories(req.params.cubeId)
+    if(req.user) {
+        if(req.user._id == cube.owner._id) {
+            cube.isOwner = true
+        }
+    }
     
    
     
@@ -56,6 +63,8 @@ cubeController.post('/:cubeId/accessories/attach', async (req,res) => {
     res.redirect(`/cube/${req.params.cubeId}/details`)
 
 })
+
+cubeController.
 
 
 

@@ -28,6 +28,9 @@ async function register(username, password) {
     if(existingUsername) {
         throw new Error('Username is already taken')
     }
+    if(password.length < 8) {
+        throw new Error('Password should be 8 characters at least')
+    }
     const hashedPassword = await bcrypt.hash(password, 9)
     const user = await User.create( {
         username,

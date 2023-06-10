@@ -1,21 +1,23 @@
 const cubeController = require('express').Router();
+const { isAuth } = require('../middlewares/isAuth');
 const { getAllAccesories, getUnattachedAccessories } = require('../services/accessoryService');
 const {  getOneCube, createCube, addAccessory, getOneCubeWithAccesories, updateCube, deleteCube,  } = require('../services/cubeService');
-const optionSelect = require('../utils.js/helpers');
+const {optionSelect,parseErrors} = require('../utils.js/helpers');
 
 
 
 
 
-cubeController.get('/create', async (req,res) => {
+cubeController.get('/create', isAuth,async (req,res) => {
    
     
     res.render('create')
 })
 
 
-cubeController.post('/create', async (req,res) => {
+cubeController.post('/create',isAuth, async (req,res) => {
 
+    
     const cubeData = {
         name : req.body.name,
         description : req.body.description,
@@ -24,9 +26,24 @@ cubeController.post('/create', async (req,res) => {
         owner: req.user._id
         
     }
-    const cube =  await createCube(cubeData)
+    try {
+
+        if(Object.values(cubeData).some(f => f == '')) {
+            throw new Error( ' All fields are mandatory')
+        }
+
+        const cube =  await createCube(cubeData)
+        res.redirect('/')
+        
+    } catch (error) {
+        
+        res.render('create' , {
+            title: 'Create Page',
+            cubeData,
+            errors: parseErrors(error),
+        })
+    }
     
-    res.redirect('/')
 })
 
 cubeController.get('/:cubeId/details', async (req,res) => {
@@ -55,7 +72,7 @@ cubeController.get('/:cubeId/accessories/attach', async (req,res) => {
 
 })
 
-cubeController.post('/:cubeId/accessories/attach', async (req,res) => {
+cubeController.post('/:cubeId/accessories/attach', isAuth, async (req,res) => {
 
     await addAccessory(req.body.accessory, req.params.cubeId)
     
@@ -65,7 +82,7 @@ cubeController.post('/:cubeId/accessories/attach', async (req,res) => {
 
 })
 
-cubeController.get('/:cubeId/edit', async (req,res)=> {
+cubeController.get('/:cubeId/edit', isAuth, async (req,res)=> {
 
     try {
 
@@ -81,7 +98,7 @@ cubeController.get('/:cubeId/edit', async (req,res)=> {
 })
 
 
-cubeController.post('/:cubeId/edit', async (req,res)=> {
+cubeController.post('/:cubeId/edit',isAuth, async (req,res)=> {
 
     try {
         const cubeData = req.body
@@ -95,7 +112,7 @@ cubeController.post('/:cubeId/edit', async (req,res)=> {
 
 })
 
-cubeController.get('/:cubeId/delete', async (req,res)=> {
+cubeController.get('/:cubeId/delete', isAuth, async (req,res)=> {
 
     try {
 
@@ -110,7 +127,7 @@ cubeController.get('/:cubeId/delete', async (req,res)=> {
 
 })
 
-cubeController.post('/:cubeId/delete', async (req,res)=> {
+cubeController.post('/:cubeId/delete',isAuth, async (req,res)=> {
 
     try {
 

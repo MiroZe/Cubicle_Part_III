@@ -1,4 +1,5 @@
 const { register, login } = require('../services/userService');
+const { parseErrors } = require('../utils.js/helpers');
 
 const userController = require('express').Router();
 
@@ -33,7 +34,7 @@ userController.post('/register', async (req, res) => {
         res.render('auth/register',
             {
                 title: 'Register Page',
-                errors: error.message
+                errors: parseErrors(error)
             })
     }
 

@@ -26,6 +26,14 @@
 
         <li><a href="/about">About</a></li>
       </ul>
+
+      {{#if errors}}
+      {{#each errors}}
+        <div id="notifications">
+          <p id="notification-message">{{this}}</p>
+        </div>
+        {{/each}}
+      {{/if}}
       <main>
         {{{body}}}
       </main>

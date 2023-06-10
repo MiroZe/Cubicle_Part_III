@@ -1,3 +1,4 @@
+const { isAuth } = require('../middlewares/isAuth');
 const { createAccesory: createAccessory } = require('../services/accessoryService');
 
 const accessoryController = require('express').Router();

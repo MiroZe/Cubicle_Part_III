@@ -1,6 +1,6 @@
 const cubeController = require('express').Router();
 const { getAllAccesories, getUnattachedAccessories } = require('../services/accessoryService');
-const {  getOneCube, createCube, addAccessory, getOneCubeWithAccesories, updateCube,  } = require('../services/cubeService');
+const {  getOneCube, createCube, addAccessory, getOneCubeWithAccesories, updateCube, deleteCube,  } = require('../services/cubeService');
 const optionSelect = require('../utils.js/helpers');
 
 
@@ -71,7 +71,7 @@ cubeController.get('/:cubeId/edit', async (req,res)=> {
 
         const cube = await getOneCube(req.params.cubeId).lean()
         const options = optionSelect(cube.difficultyLevel)
-        console.log(options);
+        
         
         res.render('edit' , {cube, options})
     } catch (error) {
@@ -89,6 +89,33 @@ cubeController.post('/:cubeId/edit', async (req,res)=> {
         await updateCube(req.params.cubeId, cubeData )
         
         res.redirect(`/cube/${req.params.cubeId}/details`)
+    } catch (error) {
+        
+    }
+
+})
+
+cubeController.get('/:cubeId/delete', async (req,res)=> {
+
+    try {
+
+        const cube = await getOneCube(req.params.cubeId).lean()
+        const options = optionSelect(cube.difficultyLevel)
+       
+        
+        res.render('delete' , {cube, options})
+    } catch (error) {
+        
+    }
+
+})
+
+cubeController.post('/:cubeId/delete', async (req,res)=> {
+
+    try {
+
+        await deleteCube(req.params.cubeId)
+        res.redirect('/')
     } catch (error) {
         
     }

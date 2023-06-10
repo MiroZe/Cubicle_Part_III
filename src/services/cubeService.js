@@ -42,6 +42,11 @@ function updateCube(cubeId,cubeData) {
     return Cube.findByIdAndUpdate(cubeId,cubeData)
 }
 
+function deleteCube(cubeId) {
+
+    return Cube.findByIdAndDelete(cubeId)
+}
+
 
 
 module.exports = {
@@ -50,6 +55,7 @@ module.exports = {
     createCube,
     addAccessory,
     getOneCubeWithAccesories,
-    updateCube
+    updateCube,
+    deleteCube
    
 }

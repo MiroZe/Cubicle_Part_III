@@ -37,6 +37,11 @@ async function addAccessory(accessoryName,cubeId) {
 
 }
 
+function updateCube(cubeId,cubeData) {
+
+    return Cube.findByIdAndUpdate(cubeId,cubeData)
+}
+
 
 
 module.exports = {
@@ -44,6 +49,7 @@ module.exports = {
     getOneCube,
     createCube,
     addAccessory,
-    getOneCubeWithAccesories
+    getOneCubeWithAccesories,
+    updateCube
    
 }

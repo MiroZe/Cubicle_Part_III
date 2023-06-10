@@ -1,6 +1,7 @@
 const cubeController = require('express').Router();
 const { getAllAccesories, getUnattachedAccessories } = require('../services/accessoryService');
-const {  getOneCube, createCube, addAccessory, getOneCubeWithAccesories,  } = require('../services/cubeService');
+const {  getOneCube, createCube, addAccessory, getOneCubeWithAccesories, updateCube,  } = require('../services/cubeService');
+const optionSelect = require('../utils.js/helpers');
 
 
 
@@ -64,7 +65,35 @@ cubeController.post('/:cubeId/accessories/attach', async (req,res) => {
 
 })
 
-cubeController.
+cubeController.get('/:cubeId/edit', async (req,res)=> {
+
+    try {
+
+        const cube = await getOneCube(req.params.cubeId).lean()
+        const options = optionSelect(cube.difficultyLevel)
+        console.log(options);
+        
+        res.render('edit' , {cube, options})
+    } catch (error) {
+        
+    }
+
+})
+
+
+cubeController.post('/:cubeId/edit', async (req,res)=> {
+
+    try {
+        const cubeData = req.body
+
+        await updateCube(req.params.cubeId, cubeData )
+        
+        res.redirect(`/cube/${req.params.cubeId}/details`)
+    } catch (error) {
+        
+    }
+
+})
 
 
 
